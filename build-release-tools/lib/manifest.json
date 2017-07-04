@@ -77,6 +77,11 @@
             "branch": "",
             "commit-id": "",
             "repository": "https://github.com/RackHD/on-web-ui.git"
+        },
+        {
+            "branch": "",
+            "commit-id": "",
+            "repository": "https://github.com/RackHD/image-service.git"
         }
     ]
 }
