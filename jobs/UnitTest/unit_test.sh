@@ -49,7 +49,7 @@ prepare_deps $1
 pushd ${WORKSPACE}/build-deps/$1
 unit_test $1
 cp test/$1.xml ${WORKSPACE}/xunit-reports
-if [ $1 -eq "image-service"]; then
+if [ $1 -eq "image-service" ]; then
     sudo chown -R ${USER}:${USER} test coverage static
 fi
 popd
