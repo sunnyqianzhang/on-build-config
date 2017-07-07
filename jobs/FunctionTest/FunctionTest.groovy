@@ -51,14 +51,29 @@ def functionTest(String test_name, String TEST_GROUP, Boolean RUN_FIT_TEST, Bool
             string(credentialsId: 'BASE_REPO_URL', variable: 'BASE_REPO_URL')
         ]) {
             try{
-                timeout(90){
+                def time_out = 90
+                def image_service_test = env.REPOS_UNDER_TEST && env.REPOS_UNDER_TEST.tokenize(',').contains("image-service")
+                if (image_service_test){
+                    time_out = 240
+                }
+                timeout(time_out){
                     // run test script
-                    sh '''#!/bin/bash -x
-                    pushd build-config
-                    ./build-config
-                    popd
-                    ./build-config/test.sh
-                    '''
+                    if (image_service_test) {
+                        sh '''#!/bin/bash -x
+                            pushd build-config
+                            ./build-config image-service
+                            popd
+                            ./build-config/test.sh
+                            '''
+                    }
+                    else{
+                        sh '''#!/bin/bash -x
+                            pushd build-config
+                            ./build-config
+                            popd
+                            ./build-config/test.sh
+                            '''
+                        }
                 }
             } finally{
                 def result = "FAILURE"
