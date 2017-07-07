@@ -52,6 +52,11 @@
             "branch": "", 
             "commit-id": "",
             "repository": "https://github.com/RackHD/on-build-config.git"
+        },
+        {
+            "branch": "",
+            "commit-id": "",
+            "repository": "https://github.com/RackHD/image-service.git"
         }
 
     ]
