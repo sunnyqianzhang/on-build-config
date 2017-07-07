@@ -265,11 +265,14 @@ runTests() {
   if [ "$RUN_FIT_TEST" == true ] ; then
      cd ${WORKSPACE}/RackHD/test
      #TODO Parameterize FIT args
+     sleep 40000000
      python run_tests.py -test deploy/rackhd_stack_init.py -stack vagrant  -port 9090 -xunit
      if [ $? -ne 0 ]; then
          echo "Test FIT failed running deploy/rackhd_stack_init.py"
          exit 1
      fi
+
+ 
      python run_tests.py -test tests -group imageservice -stack vagrant -extra imageservice_config.json -port 9090 -v 9 -xunit
      if [ $? -ne 0 ]; then
          echo "Test FIT failed running smoke test"
