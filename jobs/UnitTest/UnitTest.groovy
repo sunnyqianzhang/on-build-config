@@ -32,7 +32,7 @@ def unitTest(repo_name, used_resources){
     lock(label:label_name,quantity:1){
         String node_name = shareMethod.occupyAvailableLockedResource(label_name, used_resources)
         try{
-            node(node_name){
+            node("vmslave10"){
                 deleteDir()
                 dir("build-config"){
                     checkout scm
