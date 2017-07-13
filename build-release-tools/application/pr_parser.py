@@ -283,7 +283,7 @@ class PrParser(object):
             print "ERROR occured in parse manifest: {0}".format(error)
             sys.exit(1)
 
- def wrap_manifest_file_image_service(self, file_path):
+def wrap_manifest_file_image_service(self, file_path):
      """
      Generated manifest file
      """
