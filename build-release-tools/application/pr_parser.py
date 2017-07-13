@@ -39,7 +39,7 @@ class PrParser(object):
         self.__valid_pr_group = -1
 
     def get_repo(self):
-        return self._repo
+        return self.__repo
 
     @property
     def __gh(self):
@@ -336,7 +336,7 @@ def main():
     print "THE pr_parser is:", pr_parser
     print "\n\n\n#########################The pr_parser is:"
     repo = pr_parser.get_repo
-    if "image-service" in pr_parser:
+    if "image-service" in pr_parser.get_repo:
         pr_parser.wrap_manifest_file_image_service(parsed_args.manifest_file_path)
     else:
         pr_parser.wrap_manifest_file(parsed_args.manifest_file_path)
