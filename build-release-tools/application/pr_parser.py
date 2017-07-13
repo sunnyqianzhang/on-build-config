@@ -329,8 +329,10 @@ def parse_args(args):
 def main():
     parsed_args = parse_args(sys.argv[1:])
     pr_parser = PrParser(parsed_args.change_url, parsed_args.target_branch, parsed_args.puller_ghtoken_pool)
+    print "The parsed-args are:",parsed_args
+    print "THE pr_parser is:", pr_parser
     print "\n\n\n#########################The pr_parser is:"
-    print pr_parser.Info.repo
+    print pr_parser.repo
     if "image-service" in pr_parser.Info.repo:
         pr_parser.wrap_manifest_file_image_service(parsed_args.manifest_file_path)
     else:
