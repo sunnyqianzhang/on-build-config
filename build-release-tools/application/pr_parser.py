@@ -39,6 +39,7 @@ class PrParser(object):
         self.__valid_pr_group = -1
 
     def get_repo(self):
+        print "\n\n@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@self.__repo is:",self.__repo,type(self.__repo)
         return self.__repo
 
     @property
