@@ -38,7 +38,7 @@ class PrParser(object):
         # unmergeable pr will set this var to 1
         self.__valid_pr_group = -1
 
-    def get_repo():
+    def get_repo(self):
         return self._repo
 
     @property
@@ -335,8 +335,8 @@ def main():
     print "The parsed-args are:",parsed_args
     print "THE pr_parser is:", pr_parser
     print "\n\n\n#########################The pr_parser is:"
-    print pr_parser.get_repo()
-    if "image-service" in pr_parser.get_repo():
+    print pr_parser.get_repo
+    if "image-service" in pr_parser.get_repo:
         pr_parser.wrap_manifest_file_image_service(parsed_args.manifest_file_path)
     else:
         pr_parser.wrap_manifest_file(parsed_args.manifest_file_path)
