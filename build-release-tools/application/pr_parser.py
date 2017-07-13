@@ -333,7 +333,7 @@ def main():
     print "THE pr_parser is:", pr_parser
     print "\n\n\n#########################The pr_parser is:"
     print pr_parser.__repo
-    if "image-service" in pr_parser.__repo
+    if "image-service" in pr_parser.__repo:
         pr_parser.wrap_manifest_file_image_service(parsed_args.manifest_file_path)
     else:
         pr_parser.wrap_manifest_file(parsed_args.manifest_file_path)
