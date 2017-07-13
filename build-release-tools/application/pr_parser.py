@@ -33,7 +33,7 @@ class PrParser(object):
         self.__pr_list = [self.__repo]
         self.__pr_connectivity_map = collections.defaultdict(dict)
         self.__puller_ghtoken_pool = puller_ghtoken_pool.split()
-        # If the prs of this build is valid, 
+        # If the prs of this build is valid,
         # -1 haven't parse pr, 1 is valid, 0 invalid
         # unmergeable pr will set this var to 1
         self.__valid_pr_group = -1
@@ -63,10 +63,10 @@ class PrParser(object):
         get related prs according to the base pr
         :param repo: string, repo name associated with the pr to be parsed
         :param pr_number: number in string, pull request number of the pr to be parsed
-        :return related_prs: list of tuple of string: [(repo, sha, pr_number, commit),...] 
+        :return related_prs: list of tuple of string: [(repo, sha, pr_number, commit),...]
         pr list which is the associated with base pr
         """
-        
+
         #init github  and get related pr object
         gh = self.__gh
         pr = gh.get_repo(base_repo).get_pull(long(base_pr_number))
@@ -76,7 +76,7 @@ class PrParser(object):
         pr_texts.append(pr.body)
         for pr_comment in pr.get_issue_comments():
             pr_texts.append(pr_comment.body)
-        
+
         # pre processing
         pr_text_segment = []
         for pr_text in pr_texts:
@@ -103,10 +103,10 @@ class PrParser(object):
             if ((position+2) >= len(pr_words)) :
                 continue
 
-            #analyse dependency relationship, "depend" or "ignore" 
+            #analyse dependency relationship, "depend" or "ignore"
             if ('ignore' not in pr_words[position+1]) and ('depend' not in pr_words[position+1]):
                 continue
-            
+
             #find "ignore"
             if 'ignore' in pr_words[position+1]:
                 related_prs = None
@@ -116,7 +116,7 @@ class PrParser(object):
             #find "depend"
             disp = 2
             if pr_words[position+2] == "on":
-                disp += 1 
+                disp += 1
             for i in range(position+disp, len(pr_words)):
                 if 'https//github.com' not in pr_words[i]:
                     break
@@ -125,7 +125,7 @@ class PrParser(object):
                     repo = dep_pr_url[:dep_pr_url.rfind('/pull/')].replace('https//github.com/','')
                     assert len(repo.split('/')) == 2
                     pr_number = dep_pr_url[dep_pr_url.rfind('/pull/')+6:]
-                    assert pr_number.isalnum() 
+                    assert pr_number.isalnum()
                 except AssertionError as error:
                     print "ERROR: the pr url {0} is invalid.\n{1}".format(dep_pr_url, error)
                     sys.exit(1)
@@ -159,7 +159,7 @@ class PrParser(object):
         :param repo: string, repo name associated with the pr to be parsed
         :param sha: string, the merge_commit_sha associated with the pr to be parsed
         :param pr_number: number in string, pull request number of the pr to be parsed
-        :return all_prs: list of tuple of string: [(repo, sha, pr_number),...] 
+        :return all_prs: list of tuple of string: [(repo, sha, pr_number),...]
         which is the associated with base pr
         """
 
@@ -198,7 +198,7 @@ class PrParser(object):
         """
         According to the self.__pr_connectivity_map and self.__pr_list
         to find those under_test_prs.
-        under_test_pr: 
+        under_test_pr:
             1. root pr(which trigger this build) is under_test
             2. pr that diconnected with under_test_pr is under_test_pr
         """
@@ -250,9 +250,13 @@ class PrParser(object):
             under_test_prs = self.get_under_test_prs()
             # instance of manifest template
             manifest = Manifest.instance_of_sample("manifest-pr-gate.json")
+            print "\n\n\n##################################"
+            print manifest
 
             # wrap with pr
             repo_url_list = [repo["repository"] for repo in manifest.repositories]
+            print "\n\n\n$$$$$$$$$$$$$$$$$$$$$$$$"
+            print repo_url_list
             for pr in all_prs:
                 repo, sha1, _ = pr
                 repo_url = "https://github.com/{0}.git".format(repo)
@@ -272,6 +276,8 @@ class PrParser(object):
 
             manifest.validate_manifest()
             manifest.dump_to_json_file(file_path)
+            print  "\n\n\nThe manifest is"
+            print manifest
 
         except Exception as error:
             print "ERROR occured in parse manifest: {0}".format(error)
@@ -306,6 +312,8 @@ def parse_args(args):
 def main():
     parsed_args = parse_args(sys.argv[1:])
     pr_parser = PrParser(parsed_args.change_url, parsed_args.target_branch, parsed_args.puller_ghtoken_pool)
+    print "\n\n\n#########################The pr_parser is:"
+    print pr_parser
     pr_parser.wrap_manifest_file(parsed_args.manifest_file_path)
     if not pr_parser.pr_group_is_valid:
         print "There are unmergable PRs!"

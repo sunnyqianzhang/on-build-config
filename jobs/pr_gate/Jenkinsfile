@@ -16,6 +16,7 @@ node{
                 load("jobs/pr_gate/pr_parser.groovy")
             }
             stage("Unit Test"){
+                println env.stash_manifest_name, env.stash_manifest_path
                 prgate_unit_test.runTest(env.stash_manifest_name, env.stash_manifest_path, repo_dir)
             }
             stage("Function Test"){
