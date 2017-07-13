@@ -298,7 +298,7 @@ def wrap_manifest_file_image_service(self, file_path):
                  manifest.dump_to_json_file(file_path)
      except Exception as error:
          print "ERROR occured in parse manifest: {0}".format(error)
-                                                                                                                                                     sys.exit(1)
+         sys.exit(1)
 
 def parse_args(args):
     """
