@@ -283,6 +283,23 @@ class PrParser(object):
             print "ERROR occured in parse manifest: {0}".format(error)
             sys.exit(1)
 
+ def wrap_manifest_file_image_service(self, file_path):
+     """
+     Generated manifest file
+     """
+     try:
+         manifest = Manifest.instance_of_sample("manifest-pr-gate-image-service.json")
+         for repo in manifest.repositories:
+             if 'commit-id' in repo and repo['commit-id'] == "":
+                 repo_name = "/".join(repo["repository"][:-4].split("/")[3:])
+                 latest_commit = self.get_latest_commit(repo_name, self.__target_branch)
+                 repo["commit-id"] = latest_commit
+                 manifest.validate_manifest()
+                 manifest.dump_to_json_file(file_path)
+     except Exception as error:
+         print "ERROR occured in parse manifest: {0}".format(error)
+                                                                                                                                                     sys.exit(1)
+
 def parse_args(args):
     """
     Take in values from the user.
@@ -313,8 +330,11 @@ def main():
     parsed_args = parse_args(sys.argv[1:])
     pr_parser = PrParser(parsed_args.change_url, parsed_args.target_branch, parsed_args.puller_ghtoken_pool)
     print "\n\n\n#########################The pr_parser is:"
-    print pr_parser
-    pr_parser.wrap_manifest_file(parsed_args.manifest_file_path)
+    print pr_parser.Info.repo
+    if "image-service" in pr_parser.Info.repo:
+        pr_parser.wrap_manifest_file_image_service(parsed_args.manifest_file_path)
+    else:
+        pr_parser.wrap_manifest_file(parsed_args.manifest_file_path)
     if not pr_parser.pr_group_is_valid:
         print "There are unmergable PRs!"
         sys.exit(1)

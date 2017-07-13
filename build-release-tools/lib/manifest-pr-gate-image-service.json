@@ -1,0 +1,12 @@
+{
+    "build-name": "rackhd-devel", 
+    "build-requirements": "xenial", 
+    "downstream-jobs": [], 
+    "repositories": [
+        {
+            "branch": "",
+            "commit-id": "",
+            "repository": "https://github.com/RackHD/image-service.git"
+        }
+    ]
+}
