@@ -1,7 +1,7 @@
 #!/bin/bash -ex
 REPOS=("on-http" "on-taskgraph" "on-dhcp-proxy" "on-tftp" "on-syslog")
 if (echo ${REPOS_UNDER_TEST} | grep -q  "image-service"); then
-    REPOS+=("image-service")
+    REPOS=("image-service")
 fi
 HTTP_STATIC_FILES="${HTTP_STATIC_FILES}"
 TFTP_STATIC_FILES="${TFTP_STATIC_FILES}"
@@ -49,8 +49,8 @@ wget_download(){
 
 }
 
-dlCommonFiles() {
-    dir=$1
+dlHttpFiles() {
+    dir=${WORKSPACE}/build-deps/on-http/static/http/common
     mkdir -p ${dir} && cd ${dir}
     if [ -n "${INTERNAL_HTTP_ZIP_FILE_URL}" ]; then
         # use INTERNAL TEMP SOURCE
@@ -69,16 +69,6 @@ dlCommonFiles() {
             wget_download --no-check-certificate https://bintray.com/artifact/download/rackhd/binary/builds/${i}
         done
     fi
-}
-
-dlHttpFiles() {
-    dir=${WORKSPACE}/build-deps/on-http/static/http/common
-    dlCommonFiles ${dir}
-}
-
-dlImageServiceCommonFiles() {
-    dir=${WORKSPACE}/build-deps/image-service/static/common
-    dlCommonFiles ${dir}
 }
 
 dlTftpFiles() {
@@ -127,10 +117,9 @@ preparePackages() {
 
 prepareDeps(){
   preparePackages
-  dlTftpFiles
-  dlHttpFiles
-  if (echo ${REPOS_UNDER_TEST} | grep -q "image-service"); then
-      dlImageServiceCommonFiles
+  if (!(echo ${REPOS_UNDER_TEST} | grep -q "image-service")); then
+      dlTftpFiles
+      dlHttpFiles
   fi
 }
 
