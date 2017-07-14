@@ -1,7 +1,8 @@
 #!/bin/bash -ex
-REPOS=("on-http" "on-taskgraph" "on-dhcp-proxy" "on-tftp" "on-syslog")
 if (echo ${REPOS_UNDER_TEST} | grep -q  "image-service"); then
     REPOS=("image-service")
+else
+    REPOS=("on-http" "on-taskgraph" "on-dhcp-proxy" "on-tftp" "on-syslog")
 fi
 HTTP_STATIC_FILES="${HTTP_STATIC_FILES}"
 TFTP_STATIC_FILES="${TFTP_STATIC_FILES}"
