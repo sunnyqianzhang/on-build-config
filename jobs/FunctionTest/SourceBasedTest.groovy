@@ -80,7 +80,7 @@ def generateTestBranches(function_test){
                                         env.REPOS_UNDER_TEST = "${props.REPOS_UNDER_TEST}"
                                         sh '''
                                         echo "222222222222222222222env.REPOS_UNDER_TEST is222222222222222222222"
-                                        echo ${env.REPOS_UNDER_TEST}
+                                        echo "${props.REPOS_UNDER_TEST}"
                                         '''
                                         def repos = env.REPOS_UNDER_TEST.tokenize(',')
                                         if(repos.contains("on-http") && repos.contains("RackHD")){
