@@ -12,7 +12,8 @@
 #  $TFTP_STATIC_FILES: $2 of this script or ENV Variable: addtional file list of tftp static files to be downloaded
 #  $SKIP_PREP_DEP    : $3 of this script( if preparasion function of this script to be skipped)
 ################
-
+echo "333333333333333333333333333In prepare_manifest.sh########"
+echo ${REPOS_UNDER_TEST}
 REPOS=("on-http" "on-taskgraph" "on-dhcp-proxy" "on-tftp" "on-syslog")
 
 HTTP_STATIC_FILES="${HTTP_STATIC_FILES}"
