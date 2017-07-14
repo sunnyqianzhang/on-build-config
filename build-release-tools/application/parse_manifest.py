@@ -36,6 +36,7 @@ def get_repositories_under_test(manifest_file):
     """
     manifest = Manifest(manifest_file)
     repos_under_test = []
+    print "&&&&&&&&&&&&&The manifest.reporsitories is:&&&&&&&&&&&&", manifest.repositories
     for repo in manifest.repositories:
         if "commit-id" in repo:
             if "origin/pr" in repo["commit-id"]:
@@ -67,6 +68,9 @@ def write_downstream_parameters(repos_under_test, parameters_file):
 
 def main():
     args = parse_args(sys.argv[1:])
+    print "\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%The args in parse manifest is%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+    print args
+    print "The args.manifest_file is:", args.manifest_file
     repos_under_test = get_repositories_under_test(args.manifest_file)
     write_downstream_parameters(repos_under_test, args.parameters_file)
 

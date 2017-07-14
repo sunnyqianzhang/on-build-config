@@ -50,6 +50,7 @@ def generateTestBranches(function_test){
                                 // Get the manifest file
                                 unstash "$stash_manifest_name"
                                 env.MANIFEST_FILE="$stash_manifest_path"
+                                print "\n\n\***************env.MANIFEST_FILE is*******************",env.MANIFEST_FILE
     
                                 // If the manifest file contains PR of on-http and RackHD,
                                 // set the environment variable MODIFY_API_PACKAGE as true
