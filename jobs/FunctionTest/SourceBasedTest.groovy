@@ -78,10 +78,7 @@ def generateTestBranches(function_test){
                                     '''
                                     if(props['REPOS_UNDER_TEST']) {
                                         env.REPOS_UNDER_TEST = "${props.REPOS_UNDER_TEST}"
-                                        sh '''
-                                        echo "222222222222222222222env.REPOS_UNDER_TEST is222222222222222222222"
-                                        echo "${props.REPOS_UNDER_TEST}"
-                                        '''
+                                        sh " echo \"222222222222222222222env.REPOS_UNDER_TEST is222222222222222222222\",${env.REPOS_UNDER_TEST}"
                                         def repos = env.REPOS_UNDER_TEST.tokenize(',')
                                         if(repos.contains("on-http") && repos.contains("RackHD")){
                                             env.MODIFY_API_PACKAGE = true
