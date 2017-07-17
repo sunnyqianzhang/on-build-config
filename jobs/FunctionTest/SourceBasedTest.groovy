@@ -72,10 +72,7 @@ def generateTestBranches(function_test){
                                 env.MODIFY_API_PACKAGE = false
                                 if(fileExists ('downstream_file')) {
                                     def props = readProperties file: 'downstream_file'
-                                    sh '''
-                                    echo "1111111111111111111111111111The props is111111111111111111111111111111"
-                                    echo ${props}
-                                    '''
+                                    sh "echo \"1111111111111111111111111111The props is111111111111111111111111111111:\", ${props}"
                                     if(props['REPOS_UNDER_TEST']) {
                                         env.REPOS_UNDER_TEST = "${props.REPOS_UNDER_TEST}"
                                         sh " echo \"222222222222222222222env.REPOS_UNDER_TEST is222222222222222222222\",${env.REPOS_UNDER_TEST}"
