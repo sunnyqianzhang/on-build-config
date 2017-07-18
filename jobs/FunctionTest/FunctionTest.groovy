@@ -55,6 +55,7 @@ def functionTest(String test_name, String TEST_GROUP, Boolean RUN_FIT_TEST, Bool
                 def time_out = 90
                 sh "echo  \"444444444444444444444444444444444444The env.REPOS_UNDER_TEST is:\",${env.REPOS_UNDER_TEST}"
                 def image_service_test = env.REPOS_UNDER_TEST && env.REPOS_UNDER_TEST.tokenize(',').contains("image-service")
+                sh "ehco \"The image_service_test is\"$image_service_test"
                 if (image_service_test){
                     def shareMethod = load("jobs/ShareMethod.groovy")
                     def url = 'https://eos2git.cec.lab.emc.com/OnRack/dellemc-test'
