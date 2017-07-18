@@ -21,8 +21,10 @@ prepare_deps(){
         rm -rf build-config
         cp -r build-deps/on-build-config build-config
     fi
-    mongo pxe --eval "db.dropDatabase()"
-    mongo monorail-test --eval "db.dropDatabase()"
+    if (!(echo $1 | grep -q "image-service")); then
+        mongo pxe --eval "db.dropDatabase()"
+        mongo monorail-test --eval "db.dropDatabase()"
+    fi
     cd build-config && ./build-config "$1"
     cd ..
     popd
@@ -44,7 +46,9 @@ unit_test(){
     set -e
 }
 
-start_depends_services
+if (!(echo $1 | grep -q "image-service")); then
+    start_depends_services
+fi
 prepare_deps $1
 pushd ${WORKSPACE}/build-deps/$1
 unit_test $1

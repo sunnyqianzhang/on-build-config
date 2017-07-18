@@ -110,7 +110,10 @@ preparePackages() {
         npm install --production
         popd
     done
-    cp -r build-deps/RackHD .
+    if (!(echo ${REPOS_UNDER_TEST} | grep -q "image-service")); then
+       cp -r build-deps/RackHD . 
+    fi
+
     if [ -d "build-deps/on-build-config" ]; then
         # on-build-config from manifest has high priority
         cp -r build-deps/on-build-config build-config
