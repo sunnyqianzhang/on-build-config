@@ -36,6 +36,7 @@ def get_repositories_under_test(manifest_file):
     """
     manifest = Manifest(manifest_file)
     repos_under_test = []
+    print "&&&&&&&&&&&&&The manifest.reporsitories is:&&&&&&&&&&&&", manifest.repositories
     for repo in manifest.repositories:
         if "commit-id" in repo:
             if "origin/pr" in repo["commit-id"]:
@@ -45,10 +46,12 @@ def get_repositories_under_test(manifest_file):
 
 def write_downstream_parameters(repos_under_test, parameters_file):
     params = {}
+    print "*******The repos_under_test is***********", repos_under_test
     params['REPOS_UNDER_TEST'] = ','.join(repos_under_test)
 
     repos_need_unit_test = []
     for repo_name in repos_under_test:
+        print "\n\n\n********The repo_name is ****************", repo_name
         if repo_name in ["on-core", "on-tasks", "on-http", "on-tftp", "on-dhcp-proxy", "on-taskgraph", "on-syslog", "image-service"]:
             repos_need_unit_test.append(repo_name)
 
@@ -63,11 +66,16 @@ def write_downstream_parameters(repos_under_test, parameters_file):
     repos_need_unit_test = list(set(repos_need_unit_test))
     if len(repos_need_unit_test) > 0:
         params['REPOS_NEED_UNIT_TEST'] = ','.join(repos_need_unit_test)
+        print "%%%%%%%%%%%%%%%%%%%%%%params['REPOS_NEED_UNIT_TEST'] is%%%%%%%%%%%%%", params['REPOS_NEED_UNIT_TEST']
     common.write_parameters(parameters_file, params)
 
 def main():
     args = parse_args(sys.argv[1:])
+    print "\n\n\n%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%The args in parse manifest is%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%"
+    print args
+    print "The args.manifest_file is:", args.manifest_file
     repos_under_test = get_repositories_under_test(args.manifest_file)
+    print "%%%%%%%%%%%%%%%%%%%%%%%%%%The repos_under_test before write_downstream_parameters is %%%%%%%%%", repos_under_test
     write_downstream_parameters(repos_under_test, args.parameters_file)
 
 if __name__ == '__main__':

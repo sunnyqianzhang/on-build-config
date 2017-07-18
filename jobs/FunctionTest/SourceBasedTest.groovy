@@ -50,7 +50,7 @@ def generateTestBranches(function_test){
                                 // Get the manifest file
                                 unstash "$stash_manifest_name"
                                 env.MANIFEST_FILE="$stash_manifest_path"
-    
+                                //println env.MANIFEST_FILE
                                 // If the manifest file contains PR of on-http and RackHD,
                                 // set the environment variable MODIFY_API_PACKAGE as true
                                 // The test.sh script will install api package according to API_PACKAGE_LIST
@@ -61,16 +61,28 @@ def generateTestBranches(function_test){
                                 '''
                                 env.MODIFY_API_PACKAGE = false
                                 if(fileExists ('downstream_file')) {
+                                    sh '''
+                                    echo "11111111111111111111Executed to fileExists('downstream_file')111111111"
+                                    '''
                                     def props = readProperties file: 'downstream_file'
+                                    sh "echo \"&&&&&&&The props are:\", ${props}"
                                     if(props['REPOS_UNDER_TEST']) {
                                         env.REPOS_UNDER_TEST = "${props.REPOS_UNDER_TEST}"
                                         def repos = env.REPOS_UNDER_TEST.tokenize(',')
+                                        sh "echo \"2222222222222222222executed here to props['REPOS_UNDER_TEST']222222222222222222\", ${env.REPOS_UNDER_TEST}"
+                                        sh "echo \"Executed here the line after 22222222\""
                                         if(repos.contains("on-http") && repos.contains("RackHD")){
+                                            sh "echo \"2 Executed here the line after 22222222\""
                                             env.MODIFY_API_PACKAGE = true
                                         }
                                     }
                                 }
+
+                                sh "echo \"3 Executed here the line after 22222222\""
                                 sh './build-config/jobs/FunctionTest/prepare_common.sh'
+
+                                sh "echo \"4 Executed here the line after 22222222\""
+                                 
                                 retry(3){
                                     // This scipts can be separated into manifest_src_prepare and common_prepare
                                     sh './build-config/jobs/FunctionTest/prepare_manifest.sh'

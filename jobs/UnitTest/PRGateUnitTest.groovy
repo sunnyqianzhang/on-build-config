@@ -52,7 +52,12 @@ def runTest(String manifest_name, String manifest_path, String repo_dir){
     setRepoDir(repo_dir)
     setUnitTest()
     setManifest(manifest_name, manifest_path)
-    setTestRepos()
+    if(env.REPOS_UNDER_TEST && env.REPOS_UNDER_TEST.tokenize(',').contains("image-service")){
+        unit_test.setTestRepos("image-service")
+    }
+    else{
+        setTestRepos()
+    }
     unit_test.runTest(manifest_name, manifest_path, repo_dir)
 }
 

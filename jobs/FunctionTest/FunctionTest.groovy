@@ -53,8 +53,15 @@ def functionTest(String test_name, String TEST_GROUP, Boolean RUN_FIT_TEST, Bool
         ]) {
             try{
                 def time_out = 90
+                sh "echo  \"444444444444444444444444444444444444The env.REPOS_UNDER_TEST is:\",${env.REPOS_UNDER_TEST}"
                 def image_service_test = env.REPOS_UNDER_TEST && env.REPOS_UNDER_TEST.tokenize(',').contains("image-service")
                 if (image_service_test){
+                    def shareMethod = load("jobs/ShareMethod.groovy")
+                    def url = 'https://eos2git.cec.lab.emc.com/OnRack/dellemc-test'
+                    def branch = "master"
+                    def targetDir = 'dell-emc'
+                    def credential = 'eosgithub_cred'
+                    shareMethod.checkout(url, branch, credential, targetDir)
                     time_out = 240
                 }
                 timeout(time_out){
