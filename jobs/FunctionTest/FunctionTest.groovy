@@ -58,7 +58,7 @@ def functionTest(String test_name, String TEST_GROUP, Boolean RUN_FIT_TEST, Bool
                 sh "echo \"The image_service_test is\"$image_service_test"
                 if (image_service_test){
                     sh "echo \"5555555555\""
-                    def shareMethod = load("jobs/ShareMethod.groovy")
+                    def shareMethod = load("build-config/jobs/ShareMethod.groovy")
                     def url = 'https://eos2git.cec.lab.emc.com/OnRack/dellemc-test'
                     def branch = "master"
                     def targetDir = 'dell-emc'
