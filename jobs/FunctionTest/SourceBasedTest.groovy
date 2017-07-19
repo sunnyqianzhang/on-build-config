@@ -79,7 +79,7 @@ def generateTestBranches(function_test){
                                 }
 
                                 sh "echo \"3 Executed here the line after 22222222\""
-                                sh './build-config/jobs/FunctionTest/prepare_common.sh'
+                                //sh './build-config/jobs/FunctionTest/prepare_common.sh'
 
                                 sh "echo \"4 Executed here the line after 22222222\""
                                  
