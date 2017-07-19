@@ -7,6 +7,11 @@
             "branch": "",
             "commit-id": "",
             "repository": "https://github.com/RackHD/image-service.git"
+        },
+        {
+            "branch": "",
+            "commit-id": "",
+            "repository": "https://github.com/sunnyqianzhang/RackHD.git"
         }
     ]
 }
