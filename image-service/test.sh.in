@@ -14,37 +14,11 @@ cleanUp(){
     set +e
     cleanUpDockerContainer
     cleanUpDockerImages
-    echo $SUDO_PASSWORD |sudo -S service mongodb stop
-    echo $SUDO_PASSWORD |sudo -S service rabbitmq-server stop
     set -e
 }
 
-apiPackageModify() {
-    pushd ${WORKSPACE}/build-deps/on-http/extra
-    sed -i "s/.*git symbolic-ref.*/ continue/g" make-deb.sh
-    sed -i "/build-package.bash/d" make-deb.sh
-    sed -i "/GITCOMMITDATE/d" make-deb.sh
-    sed -i "/mkdir/d" make-deb.sh
-    bash make-deb.sh
-    popd
-    for package in ${API_PACKAGE_LIST}; do
-      sudo pip uninstall -y ${package//./-} || true
-      pushd ${WORKSPACE}/build-deps/on-http/$package
-        fail=true
-        while $fail; do
-          python setup.py install
-          if [ $? -eq 0 ];then
-        	  fail=false
-          fi
-        done
-      popd
-    done
-}
 
-TEST_GROUP="${TEST_GROUP}"
-if [ -z "${TEST_GROUP}" ]; then
-   TEST_GROUP="image-service"
-fi
+TEST_GROUP="imageservice"
 
 generateSolLogStop(){
   set +e
@@ -63,9 +37,6 @@ setupVirtualEnv(){
   ./mkenv.sh on-build-config
   source myenv_on-build-config
   popd
-  if [ "$MODIFY_API_PACKAGE" == true ] ; then
-      apiPackageModify
-  fi
 }
 
 BASE_REPO_URL="${BASE_REPO_URL}"
