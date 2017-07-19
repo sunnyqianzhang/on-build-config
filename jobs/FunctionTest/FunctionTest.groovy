@@ -56,7 +56,7 @@ def functionTest(String test_name, String TEST_GROUP, Boolean RUN_FIT_TEST, Bool
                 sh "echo  \"444444444444444444444444444444444444The env.REPOS_UNDER_TEST is:\",${env.REPOS_UNDER_TEST}"
                 def image_service_test = env.REPOS_UNDER_TEST && env.REPOS_UNDER_TEST.tokenize(',').contains("image-service")
                 sh "echo \"The image_service_test is\"$image_service_test"
-                if (image_service_test){
+                /*if (image_service_test){
                     sh "echo \"555555555511111\""
                         withCredentials([
                                 usernamePassword(credentialsId: 'eosgithub_cred',
@@ -73,7 +73,7 @@ def functionTest(String test_name, String TEST_GROUP, Boolean RUN_FIT_TEST, Bool
                                 sh "echo \"77777777\""
                         }
                     time_out = 240
-                }
+                }*/
                 timeout(time_out){
                     // run test script
                     if (image_service_test) {

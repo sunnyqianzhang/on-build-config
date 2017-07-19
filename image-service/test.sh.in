@@ -57,21 +57,6 @@ generateSysLog(){
   echo $SUDO_PASSWORD |sudo -S docker exec -it $containerId dmesg > ${WORKSPACE}/build-log/dmesg.log
 }
 
-generateMongoLog(){
-  set +e
-  containerId=$( echo $SUDO_PASSWORD |sudo -S docker ps|grep "my/test" | awk '{print $1}' )
-  echo $SUDO_PASSWORD |sudo -S docker cp $containerId:/var/log/mongodb ${WORKSPACE}/build-log
-  echo $SUDO_PASSWORD |sudo -S chown -R $USER:$USER ${WORKSPACE}/build-log/mongodb
-}
-
-generateRackHDLog(){
-  set +e
-  containerId=$( echo $SUDO_PASSWORD |sudo -S docker ps|grep "my/test" | awk '{print $1}' )
-  echo $SUDO_PASSWORD |sudo -S docker cp $containerId:/root/.pm2/logs ${WORKSPACE}/build-log
-  echo $SUDO_PASSWORD |sudo -S chown -R $USER:$USER ${WORKSPACE}/build-log/logs
-  mv ${WORKSPACE}/build-log/logs/*.log ${WORKSPACE}/build-log
-}
-
 setupVirtualEnv(){
   pushd ${WORKSPACE}/RackHD/test
   rm -rf .venv/on-build-config
@@ -92,7 +77,7 @@ runTests() {
       args+="$1"
   fi
   if [ "$RUN_FIT_TEST" == true ] ; then
-      fitSmokeTest "${args}"
+      fitImageServiceTest "${args}"
   fi
   set -e
 }
@@ -135,12 +120,13 @@ collectTestReport()
     popd
 }
 
-fitSmokeTest()
+fitImageServiceTest()
 {
     echo "########### Run FIT Smoke Test #############"
-    python run_tests.py ${TEST_GROUP} ${tstack} ${args} -v 4 -xunit
+    python run_tests.py ${TEST_GROUP} ${tstack} ${args} -extra imageservice_config.json -v 4 -xunit
+    #python run_tests.py -test tests -group imageservice -stack vagrant -extra imageservice_config.json -port 9090 -v 9 -xunit
     if [ $? -ne 0 ]; then
-        echo "Test FIT failed running smoke test"
+        echo "Test FIT failed running image service test"
         collectTestReport
         exit 1
     fi
@@ -152,89 +138,17 @@ fitSmokeTest()
 exportLog(){
     set +e
     generateSolLogStop
-    generateRackHDLog
-    generateMongoLog
     echo $SUDO_PASSWORD| sudo -S chown -R $USER:$USER ${WORKSPACE}
     set -e
 }
-######################################
-#  OVA POST SMOKE TEST RELATED END   #
-######################################
 
-if [ "$RUN_FIT_TEST" == true ] ; then
-  if [ "$TEST_TYPE" == "ova" ]; then
-    # based on the assumption that in the same folder, the VMs has been exist normally. so don't destroy VM here.
-    
-    
-    # Prepare RackHD
-    # Forward local host port to ova
-    portForwarding ${OVA_INTERNAL_IP}
-
-    # We setup the virtual-environment here, since once we
-    # call "nodesOn", it's a race to get to the first test
-    # before the nodes get booted far enough to start being
-    # seen by RackHD. Logically, it would be better IN runTests.
-    # We do it between the vagrant and waitForAPI to use the
-    # time to make the env instead of doing sleeps...
-    setupVirtualEnv
-    # Doesn't support ova smoke test now
-    # generateSolLog
-    # Run tests
-    runTests
-    # exit venv
-    deactivate
-
-    # Remedial work
-    # Specific remedial work
-    fetchOVALog
-
-    # Clean Up below
-
-    #shutdown vagrant box and delete all resource (like removing vm disk files in "~/VirtualBox VMs/")
-    #cleanupVMs
-    #nodesDelete
-  elif [ "$TEST_TYPE" == "docker" ]; then
-    # based on the assumption that in the same folder, the VMs has been exist normally. so don't destroy VM here.
-    
-    
-    # Prepare RackHD
-    # Forward local host port to ova
-    portForwarding localhost
-
-    # We setup the virtual-environment here, since once we
-    # call "nodesOn", it's a race to get to the first test
-    # before the nodes get booted far enough to start being
-    # seen by RackHD. Logically, it would be better IN runTests.
-    # We do it between the vagrant and waitForAPI to use the
-    # time to make the env instead of doing sleeps...
-    setupVirtualEnv
-    # Doesn't support ova smoke test now
-    # generateSolLog
-    # Run tests
-    runTests
-    # exit venv
-    deactivate
-
-    # Clean Up below
-
-    #shutdown vagrant box and delete all resource (like removing vm disk files in "~/VirtualBox VMs/")
-    #cleanupVMs
-    #nodesDelete
-  else
-    # rese the UCSPE emulators 
-    ucsReset
-    cleanUp
-    # register the signal handler to export log
-    trap exportLog SIGINT SIGTERM SIGKILL EXIT
-    setupTestsConfig
-    dockerUp
-    # Setup the virtual-environment
-    setupVirtualEnv
-    waitForAPI
-
-    generateSolLog
-    # Run tests
-    runTests " --sm-amqp-use-user guest"
-  fi
-
-fi
+cleanUp
+# register the signal handler to export log
+trap exportLog SIGINT SIGTERM SIGKILL EXIT
+setupTestsConfig
+dockerUp
+# Setup the virtual-environment
+setupVirtualEnv
+generateSolLog
+# Run tests
+runTests " --sm-amqp-use-user guest"
