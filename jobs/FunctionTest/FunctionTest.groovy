@@ -57,15 +57,21 @@ def functionTest(String test_name, String TEST_GROUP, Boolean RUN_FIT_TEST, Bool
                 def image_service_test = env.REPOS_UNDER_TEST && env.REPOS_UNDER_TEST.tokenize(',').contains("image-service")
                 sh "echo \"The image_service_test is\"$image_service_test"
                 if (image_service_test){
-                    sh "echo \"5555555555\""
-                    def shareMethod = load("build-config/jobs/ShareMethod.groovy")
-                    def url = 'https://eos2git.cec.lab.emc.com/OnRack/dellemc-test'
-                    def branch = "master"
-                    def targetDir = 'dell-emc'
-                    def credential = 'eosgithub_cred'
-                    sh "echo \"6666666666\""
-                    shareMethod.checkout(url, branch, credential, targetDir)
-                    sh "echo \"77777777\""
+                    sh "echo \"555555555511111\""
+                        withCredentials([
+                                usernamePassword(credentialsId: 'eosgithub_cred',
+                                    passwordVariable: 'EOS_PASS',
+                                    usernameVariable: 'EOS_USER')
+                        ]) {
+                            def shareMethod = load("build-config/jobs/ShareMethod.groovy")
+                                sh "echo \"5555555\""
+                                def url = 'https://eos2git.cec.lab.emc.com/OnRack/dellemc-test'
+                                def branch = "master"
+                                def targetDir = 'dell-emc'
+                                sh "echo \"6666666666\""
+                                shareMethod.checkout(url, branch, targetDir)
+                                sh "echo \"77777777\""
+                        }
                     time_out = 240
                 }
                 timeout(time_out){
