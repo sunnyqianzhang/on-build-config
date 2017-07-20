@@ -45,7 +45,7 @@ def functionTest(String test_name, String TEST_GROUP, Boolean RUN_FIT_TEST, Bool
             usernamePassword(credentialsId: 'ff7ab8d2-e678-41ef-a46b-dd0e780030e1',
                              passwordVariable: 'SUDO_PASSWORD',
                              usernameVariable: 'SUDO_USER'),
-            string(credentialsId: 'SENTRY_HOST', variable: 'SENTRY_HOST'),
+            string(credentialsId: 'eosgithub_cred', variable: 'eosgithub_cred'),
             string(credentialsId: 'SMB_USER', variable: 'SMB_USER'),
             string(credentialsId: 'RACKHD_SMB_WINDOWS_REPO_PATH', variable: 'RACKHD_SMB_WINDOWS_REPO_PATH'),
             string(credentialsId: 'REDFISH_URL', variable: 'REDFISH_URL'),
@@ -56,12 +56,13 @@ def functionTest(String test_name, String TEST_GROUP, Boolean RUN_FIT_TEST, Bool
                 sh "echo  \"444444444444444444444444444444444444The env.REPOS_UNDER_TEST is:\",${env.REPOS_UNDER_TEST}"
                 def image_service_test = env.REPOS_UNDER_TEST && env.REPOS_UNDER_TEST.tokenize(',').contains("image-service")
                 sh "echo \"The image_service_test is\"$image_service_test"
-                /*if (image_service_test){
+                if (image_service_test){
                     sh "echo \"555555555511111\""
                         withCredentials([
-                                usernamePassword(credentialsId: 'eosgithub_cred',
+                                /*usernamePassword(credentialsId: 'eosgithub_cred',
                                     passwordVariable: 'EOS_PASS',
-                                    usernameVariable: 'EOS_USER')
+                                    usernameVariable: 'EOS_USER')*/
+                                    string(credentialsId: 'eosgithub_cred', variable: 'eosgithub_cred')
                         ]) {
                             def shareMethod = load("build-config/jobs/ShareMethod.groovy")
                                 sh "echo \"5555555\""
@@ -69,11 +70,11 @@ def functionTest(String test_name, String TEST_GROUP, Boolean RUN_FIT_TEST, Bool
                                 def branch = "master"
                                 def targetDir = 'dell-emc'
                                 sh "echo \"6666666666\""
-                                shareMethod.checkout(url, branch, targetDir)
+                                shareMethod.checkout(url, branch,'eosgithub_cred', targetDir)
                                 sh "echo \"77777777\""
                         }
                     time_out = 240
-                }*/
+                }
                 timeout(time_out){
                     // run test script
                     if (image_service_test) {

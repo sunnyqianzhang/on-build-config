@@ -1,3 +1,9 @@
+def checkout(String url, String branch, String credentialsId, String targetDir){
+    checkout(
+            [$class: 'GitSCM', branches: [[name: branch]],
+            extensions: [[$class: 'RelativeTargetDirectory', relativeTargetDir: targetDir]],
+            userRemoteConfigs: [[credentialsId: credentialsId, url: url]]])
+}
 def checkout(String url, String branch, String targetDir){
     checkout(
     [$class: 'GitSCM', branches: [[name: branch]],
